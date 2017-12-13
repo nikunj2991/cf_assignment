@@ -3,7 +3,9 @@ import {
 	LOAD_TASK_RESPONSE,
 	SAVE_TASKS_REQUEST,
 	SAVE_TASKS_RESPONSE,
-	ADD_TASK
+	ADD_TASK,
+	EDIT_TASK,
+	DELETE_TASK
 } from '../actions/index';
 
 const initialState = {
@@ -14,7 +16,8 @@ const initialState = {
 	idCounter: 0
 };
 
-export default function taskList(state, action) {
+export default function tasks(state, action) {
+	let updatedTasks;
 	switch (action.type) {
 		case LOAD_TASK_REQUEST:
 			return Object.assign({}, state, {isLoadingTasks: true});
@@ -26,15 +29,30 @@ export default function taskList(state, action) {
 		case SAVE_TASKS_RESPONSE:
 			return console.log(action.type);
 		case ADD_TASK:
-			const incrementedIdCounter = state.idCounter + 1;
+			const newTasks = {}
+			const updatedIdCounter = state.idCounter + 1;
 			const newTask = {
-				isFocused: true,
 				name: '',
-				id: incrementedIdCounter
+				id: updatedIdCounter
 			};
-			const { tasks } = state;
-			tasks.unshift(newTask);
-			return Object.assign({}, state, { tasks, idCounter: incrementedIdCounter });
+			return Object.assign({}, state, {
+					tasks: [...state.tasks, newTask],
+					idCounter: updatedIdCounter
+				}
+			);
+		case EDIT_TASK:
+			updatedTasks = state.tasks.map(function(task, index) {
+				if(task.id === action.task.id) {
+					task.name = action.task.name;
+				}
+				return task;
+			});
+			return Object.assign({}, state, { tasks: updatedTasks });
+		case DELETE_TASK:
+			updatedTasks = state.tasks.filter(function(task, index) {
+				return task.id !== action.taskId
+			}); 
+			return Object.assign({}, state, { tasks: updatedTasks });
 		default:
 			return initialState;
 	};

@@ -3,42 +3,46 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { 
 	loadTasks,
-	addTask
+	addTask,
+	editTask,
+	deleteTask
 } from '../actions/index';
 import Task from './Task';
 
 class App extends React.Component {
 	constructor(props) {
 		super(props);
-		this.addTask = this.addTask.bind(this);
 	}
 
 	componentDidMount() {
-		const { dispatch } = this.props;
-    	dispatch(loadTasks());
+		this.props.loadTasks();
   	}
 
-  	addTask() {
-  		const { dispatch } = this.props;
-  		dispatch(addTask());
-  	}
-
-  	componentWillUpdate() {
-  		console.log("Component updated");
+  	componentWillReceiveProps(nextProps) {
+  		console.log(nextProps);
   	}
 
 	render() {
-		const { tasks } = this.props;
+		const { tasks, handleAddTask, handleEditTask, handleDeleteTask } = this.props;
 		return (
 			<div className="page">
 				<div className="header"></div>
 				<div className="content">
 					<div className="content-header">
 						<h2>Tasks</h2>
-						<button type="button" className="add-task" onClick={this.addTask}>Add Task</button>
+						<button type="button" className="add-task" onClick={handleAddTask}>Add Task</button>
 						<button type="button" className="save">Save</button>  
 					</div>
-					<Task />
+					{ tasks && tasks.map(function(task) {
+						const taskId = `task_${task.id}`;
+						return <Task key={task.id}
+							taskId={taskId} 
+							data={task} 
+							editTask={(task) => handleEditTask(task)} 
+							deleteTask={(taskId) => handleDeleteTask(taskId)}
+						/>;
+					  })
+					}
 				</div>
 			</div>
 		);
@@ -46,31 +50,38 @@ class App extends React.Component {
 }
 
 App.propTypes = {
-	dispatch: PropTypes.func.isRequired,
-	tasks: PropTypes.arrayOf(
-    	PropTypes.shape({
-      		id: PropTypes.number.isRequired,
-      		isFocused: PropTypes.bool.isRequired,
-      		name: PropTypes.string.isRequired
-    	})
-  	),
+	tasks: PropTypes.array,
 	isLoadingTasks: PropTypes.bool,
 	isSaveBtnEnabled: PropTypes.bool,
-	notification: PropTypes.string
-}
+	notification: PropTypes.string,
+	loadTasks: PropTypes.func,
+	handleAddTask: PropTypes.func,
+	handleEditTask: PropTypes.func
+};
 
 function mapStateToProps(state) {
 	const {
 		isLoadingTasks,
 		isSaveBtnEnabled,
-		notification
-	} = state;
+		notification,
+		tasks
+	} = state.tasks;
 
 	return {
 		isLoadingTasks,
 		isSaveBtnEnabled,
-		notification		
+		notification,
+		tasks		
 	}
 }
 
-export default connect(mapStateToProps)(App);
+function mapDispatchToProps(dispatch) {
+	return {
+		loadTasks: function() {return dispatch(loadTasks());},
+		handleAddTask: function() {return dispatch(addTask());},
+		handleEditTask: function(task) {return dispatch(editTask(task));},
+		handleDeleteTask: function(taskId) {return dispatch(deleteTask(taskId));}
+	};
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
