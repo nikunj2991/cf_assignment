@@ -35,8 +35,10 @@ export default function tasks(state, action) {
 				name: '',
 				id: updatedIdCounter
 			};
+			updatedTasks = Object.assign([], state.tasks);
+			updatedTasks.unshift(newTask);
 			return Object.assign({}, state, {
-					tasks: [...state.tasks, newTask],
+					tasks: updatedTasks,
 					idCounter: updatedIdCounter
 				}
 			);

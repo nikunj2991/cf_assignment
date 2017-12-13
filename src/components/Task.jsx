@@ -55,7 +55,7 @@ class Task extends React.Component {
 		const { taskId } = this.props;
 		const { name } = this.props.data;
 		return (
-			<div id={taskId} className="task">
+			<li id={taskId} className="task">
 				{ isFocused ?
 					<input ref={(input) => {this.textInput = input}} 
 						type="text" placeholder="Enter new task..." 
@@ -68,7 +68,7 @@ class Task extends React.Component {
 					</p>
 					
 				}
-			</div>
+			</li>
 		);
 	}
 }

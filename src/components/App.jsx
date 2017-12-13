@@ -33,16 +33,18 @@ class App extends React.Component {
 						<button type="button" className="add-task" onClick={handleAddTask}>Add Task</button>
 						<button type="button" className="save">Save</button>  
 					</div>
-					{ tasks && tasks.map(function(task) {
-						const taskId = `task_${task.id}`;
-						return <Task key={task.id}
-							taskId={taskId} 
-							data={task} 
-							editTask={(task) => handleEditTask(task)} 
-							deleteTask={(taskId) => handleDeleteTask(taskId)}
-						/>;
-					  })
-					}
+					<ol>
+						{ tasks && tasks.map(function(task) {
+							const taskId = `task_${task.id}`;
+							return <Task key={task.id}
+								taskId={taskId} 
+								data={task} 
+								editTask={(task) => handleEditTask(task)} 
+								deleteTask={(taskId) => handleDeleteTask(taskId)}
+							/>;
+						  })
+						}
+					</ol>
 				</div>
 			</div>
 		);
