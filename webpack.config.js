@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = {
   entry: './src/index.jsx',
@@ -30,7 +31,15 @@ module.exports = {
 	          presets: { presets: [ "es2015", "react"] }
 	        }
 	      }
-	    }
+	    },
+      {
+        test: /\.scss$/,
+        exclude: /(node_modules|bower_components)/,
+        use: ExtractTextPlugin.extract({
+          fallback: "style-loader",
+          use: ['css-loader', 'sass-loader']
+        })
+      }
 	  ]
 	}
 };

@@ -1,6 +1,24 @@
-import React from 'react';
+import 'babel-polyfill';
+
+import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import Page from './components/Page';
+import { Provider } from 'react-redux';
+import configureStore from './reducers/configureStore';
+import App from './components/App';
 
+const store = configureStore()
 
-ReactDOM.render(< Page/>, document.getElementById('root'));
+class Root extends Component {
+  render() {
+    return (
+      <Provider store={store}>
+        <App />
+      </Provider>
+    )
+  }
+}
+
+ReactDOM.render(
+  <Root />,
+  document.getElementById('root')
+);
