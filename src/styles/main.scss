@@ -1,0 +1,100 @@
+$fa-font-path: "~font-awesome/fonts";
+@import '~font-awesome/scss/font-awesome.scss';
+@import url('https://fonts.googleapis.com/css?family=Lato');
+
+//SASS Vairiable
+$white: #fff;
+$dark-blue:  rgba(8, 21, 45, 0.9);
+$green-btn: #25cc68;
+$blue-btn: #8592ab;
+$grey-shadow: #cacaca;
+$lato: 'Lato', sans-serif;
+
+html {
+	background: #f1f3fb;
+}
+
+body {
+	margin: 0;
+}
+
+.header {
+	height: 50px;
+	width: 100%;
+	background: $dark-blue;
+}
+
+.content {
+	padding: 1.5% 15% 0;
+}
+
+.content-header {
+	margin: 0 0 25px;
+
+	h2 {
+		font-family: $lato;
+		font-weight: bold;
+		color: $dark-blue;
+		margin: 0;
+		display: inline;
+		line-height: 1.5;
+	}
+}
+
+.save-tasks {
+	float: right;
+	color: $white;
+	background: $green-btn;
+}
+
+.add-task {
+	float: right;
+	color: $white;
+	margin: 0 15px 0 0;
+	background: $blue-btn;
+}
+
+ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.task {
+	font-family: $lato;
+	font-size: 14px;
+	font-weight: bold;
+	height: 100px;
+	width: inherit;
+	background: $white;
+    padding: 10px 15px;
+    -webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	-ms-border-radius: 5px;
+	border-radius: 5px;
+	margin: 0 0 15px 0;
+	box-shadow: 0 2px 5px 0px $grey-shadow;
+
+	p {
+		margin: 0;
+		color: $blue-btn;
+	}
+}
+
+.delete-task {
+	float: right;
+	color: $blue-btn;
+	font-size: 20px;
+}
+
+button {
+	font-family: $lato;
+	font-weight: bold;
+	border: none;
+    height: 35px;
+    padding: 10px 15px;
+    -webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	-ms-border-radius: 5px;
+	border-radius: 5px;
+}

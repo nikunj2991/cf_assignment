@@ -63,8 +63,8 @@ class Task extends React.Component {
 						defaultValue={name}
 					/> :
 					<p className="task-name" onClick={this.editTask}>
-						{name}
-						<span className="delete-task" onClick={this.deleteTask}>Delete task</span>
+						{name.toUpperCase()}
+						<span className="delete-task fa fa-trash" onClick={this.deleteTask}></span>
 					</p>
 					
 				}

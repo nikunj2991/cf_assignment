@@ -30,8 +30,8 @@ class App extends React.Component {
 				<div className="content">
 					<div className="content-header">
 						<h2>Tasks</h2>
+						<button type="button" className="save-tasks">Save</button>
 						<button type="button" className="add-task" onClick={handleAddTask}>Add Task</button>
-						<button type="button" className="save">Save</button>  
 					</div>
 					<ol>
 						{ tasks && tasks.map(function(task) {
