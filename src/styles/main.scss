@@ -5,7 +5,8 @@ $fa-font-path: "~font-awesome/fonts";
 //SASS Vairiable
 $white: #fff;
 $dark-blue:  rgba(8, 21, 45, 0.9);
-$green-btn: #25cc68;
+$green: #25cc68;
+$green-bg: #eefdfd;
 $blue-btn: #8592ab;
 $grey-shadow: #cacaca;
 $lato: 'Lato', sans-serif;
@@ -44,7 +45,7 @@ body {
 .save-tasks {
 	float: right;
 	color: $white;
-	background: $green-btn;
+	background: $green;
 }
 
 .add-task {
@@ -61,23 +62,24 @@ ol {
 }
 
 .task {
+	@extend border-radius;
+
 	font-family: $lato;
 	font-size: 14px;
 	font-weight: bold;
 	height: 100px;
 	width: inherit;
 	background: $white;
-    padding: 10px 15px;
-    -webkit-border-radius: 5px;
-	-moz-border-radius: 5px;
-	-ms-border-radius: 5px;
-	border-radius: 5px;
+    padding: 10px 20px;
 	margin: 0 0 15px 0;
 	box-shadow: 0 2px 5px 0px $grey-shadow;
 
 	p {
 		margin: 0;
 		color: $blue-btn;
+		cursor: pointer;
+		display: inline;
+		line-height: 1.5;
 	}
 }
 
@@ -85,16 +87,55 @@ ol {
 	float: right;
 	color: $blue-btn;
 	font-size: 20px;
+	cursor: pointer;
+}
+
+.empty-tasks {
+	font-family: $lato;
+	color: $blue-btn;
+}
+
+.notification {
+	@extend border-radius;
+
+	position: absolute;
+	top: 85%;
+	right: 7%;
+	padding: 5px 15px;
+	font-family: $lato;
+	font-size: 14px;
+	width: 35%;
+	color: $green;
+	border: 1px solid $green;
+	background: $green-bg;
+	line-height: 1.75;
+
+	span {
+		float: right;
+		margin: 4px 0 0;
+		cursor: pointer;
+	}
 }
 
 button {
+	@extend border-radius;
+
 	font-family: $lato;
 	font-weight: bold;
 	border: none;
     height: 35px;
     padding: 10px 15px;
-    -webkit-border-radius: 5px;
+	cursor: pointer;
+
+	&:disabled {
+		opacity: 0.2;
+	}
+}
+
+border-radius {
+	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
 	-ms-border-radius: 5px;
 	border-radius: 5px;
 }
+

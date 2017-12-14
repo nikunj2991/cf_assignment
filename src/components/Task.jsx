@@ -8,18 +8,20 @@ class Task extends React.Component {
 			isFocused: false,
 		};
 		this.blurInput = this.blurInput.bind(this);
-		this.editTask = this.editTask.bind(this);
-		this.deleteTask = this.deleteTask.bind(this);
+		this._editTask = this._editTask.bind(this);
+		this._deleteTask = this._deleteTask.bind(this);
 	}
 
 	componentWillMount() {
 		if(!this.props.data.name) {
-			this.setState({ isFocused: true});
+			this.setState({ isFocused: true });
 		}	
 	}
 
 	componentDidMount() {
-		this.textInput.focus();
+		if(this.state.isFocused) {
+			this.textInput.focus();
+		}
 	}
 
 	componentDidUpdate() {
@@ -42,11 +44,11 @@ class Task extends React.Component {
 		}
 	}
 
-	editTask(event) {
+	_editTask(event) {
 		this.setState({ isFocused: true});
 	}
 
-	deleteTask(event) {
+	_deleteTask(event) {
 		this.props.deleteTask(this.props.data.id);
 	}
 
@@ -55,18 +57,19 @@ class Task extends React.Component {
 		const { taskId } = this.props;
 		const { name } = this.props.data;
 		return (
-			<li id={taskId} className="task">
+			<li id={ taskId } className="task">
 				{ isFocused ?
-					<input ref={(input) => {this.textInput = input}} 
+					<input ref={ (input) => { this.textInput = input } } 
 						type="text" placeholder="Enter new task..." 
-						onBlur={this.blurInput}
-						defaultValue={name}
+						onBlur={ this.blurInput }
+						defaultValue={ name }
 					/> :
-					<p className="task-name" onClick={this.editTask}>
-						{name.toUpperCase()}
-						<span className="delete-task fa fa-trash" onClick={this.deleteTask}></span>
-					</p>
-					
+					<div>
+						<p className="task-name" onClick={ this._editTask }>
+							{name.toUpperCase()}
+						</p>
+						<span className="delete-task fa fa-trash-o" onClick={ this._deleteTask }></span>
+					</div>
 				}
 			</li>
 		);

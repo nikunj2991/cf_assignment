@@ -1,4 +1,5 @@
 const name = 'nmehta';
+const url = `http://cfassignment.herokuapp.com/${name}/tasks`;
 
 export const LOAD_TASK_REQUEST = 'LOAD_TASK_REQUEST';
 export const LOAD_TASK_RESPONSE = 'LOAD_TASK_RESPONSE';
@@ -9,13 +10,13 @@ export const REMOVE_NOTIFICATION = 'REMOVE_NOTIFICATION';
 export const SAVE_TASKS_REQUEST = 'SAVE_TASKS_REQUEST';
 export const SAVE_TASKS_RESPONSE = 'SAVE_TASKS_RESPONSE';
 
-export const loadTaskRequest = () => {
+const loadTaskRequest = () => {
   return {
     type: LOAD_TASK_REQUEST
   };
 };
 
-export const loadTaskResponse = (response) => {
+const loadTaskResponse = (response) => {
 	return {
 		type: LOAD_TASK_RESPONSE,
 		response
@@ -48,14 +49,14 @@ export const removeNotification = () => {
 	};
 };
 
-export const saveTaskRequest = (tasks) => {
+const saveTasksRequest = (tasks) => {
 	return {
 		type: SAVE_TASKS_REQUEST,
 		tasks
 	};
 };
 
-export const saveTaskResponse = (response) => {
+const saveTasksResponse = (response) => {
 	return {
 		type: SAVE_TASKS_RESPONSE,
 		response
@@ -65,11 +66,30 @@ export const saveTaskResponse = (response) => {
 export function loadTasks() {
 	return dispatch => {
 		dispatch(loadTaskRequest());
-		return fetch(`http://cfassignment.herokuapp.com/${name}/tasks`)
+		return fetch(url)
 			.then(response => response.json())
 			.then(json => dispatch(loadTaskResponse(json)))
 			.catch(function(err) {
 				console.log(err);
-			});
+			}
+		);
+	};
+};
+
+export function saveTasks(tasks) {
+	return dispatch => {
+		dispatch(saveTasksRequest(tasks));
+		return fetch(url, {
+			method: 'post',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({tasks})
+		}).then(response => response.json())
+		  .then(json => dispatch(saveTasksResponse(json)))
+		  .catch(function(err) {
+		  	console.log(err);
+		  }
+		);
 	};
 };

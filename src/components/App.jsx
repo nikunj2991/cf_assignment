@@ -5,33 +5,65 @@ import {
 	loadTasks,
 	addTask,
 	editTask,
-	deleteTask
+	deleteTask,
+	saveTasks,
+	removeNotification	
 } from '../actions/index';
 import Task from './Task';
+import Notification from './Notification';
 
 class App extends React.Component {
 	constructor(props) {
 		super(props);
+		this._handleAddTaskBtn = this._handleAddTaskBtn.bind(this);
+		this._handleSaveTasksBtn = this._handleSaveTasksBtn.bind(this);
+		this._removeNotification = this._removeNotification.bind(this);
+		this.timer;
 	}
 
 	componentDidMount() {
-		this.props.loadTasks();
+		this.props.dispatchLoadTasks();
   	}
 
-  	componentWillReceiveProps(nextProps) {
-  		console.log(nextProps);
+  	componentDidUpdate() {
+  		const { notification, dispatchRemoveNotification } = this.props;
+  		if(notification.length) {
+  			this.timer = setTimeout(dispatchRemoveNotification, 3000);
+  		}
+  	}
+
+  	_removeNotification() {
+  		const { dispatchRemoveNotification } = this.props;
+  		clearTimeout(this.timer);
+  		dispatchRemoveNotification();
+  	}
+
+  	_handleAddTaskBtn() {
+  		this.props.dispatchAddTask();
+  	}
+
+  	_handleSaveTasksBtn() {
+  		const { tasks, dispatchSaveTasks } = this.props;
+  		dispatchSaveTasks(tasks);
   	}
 
 	render() {
-		const { tasks, handleAddTask, handleEditTask, handleDeleteTask } = this.props;
+		const { 
+			tasks, 
+			dispatchEditTask, 
+			dispatchDeleteTask,
+			dispatchRemoveNotification,
+			notification, 
+			isSaveBtnEnabled 
+		} = this.props;
 		return (
 			<div className="page">
 				<div className="header"></div>
 				<div className="content">
 					<div className="content-header">
 						<h2>Tasks</h2>
-						<button type="button" className="save-tasks">Save</button>
-						<button type="button" className="add-task" onClick={handleAddTask}>Add Task</button>
+						<button type="button" className="save-tasks" disabled={ !isSaveBtnEnabled } onClick={ this._handleSaveTasksBtn }>Save</button>
+						<button type="button" className="add-task" onClick={ this._handleAddTaskBtn }>Add Task</button>
 					</div>
 					<ol>
 						{ tasks && tasks.map(function(task) {
@@ -39,13 +71,15 @@ class App extends React.Component {
 							return <Task key={task.id}
 								taskId={taskId} 
 								data={task} 
-								editTask={(task) => handleEditTask(task)} 
-								deleteTask={(taskId) => handleDeleteTask(taskId)}
+								editTask={(task) => dispatchEditTask(task)} 
+								deleteTask={(taskId) => dispatchDeleteTask(taskId)}
 							/>;
 						  })
 						}
 					</ol>
+					{ !tasks.length && <div className="empty-tasks">Your tasks list is empty.</div>}
 				</div>
+				{ notification && <Notification text={notification} removeNotification={this._removeNotification}/> }
 			</div>
 		);
 	}
@@ -56,9 +90,12 @@ App.propTypes = {
 	isLoadingTasks: PropTypes.bool,
 	isSaveBtnEnabled: PropTypes.bool,
 	notification: PropTypes.string,
-	loadTasks: PropTypes.func,
-	handleAddTask: PropTypes.func,
-	handleEditTask: PropTypes.func
+	dispatchLoadTasks: PropTypes.func,
+	dispatchAddTask: PropTypes.func,
+	dispatchEditTask: PropTypes.func,
+	dispatchSaveTasks: PropTypes.func,
+	dispatchDeleteTask: PropTypes.func,
+	dispatchRemoveNotification: PropTypes.func
 };
 
 function mapStateToProps(state) {
@@ -79,10 +116,12 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
 	return {
-		loadTasks: function() {return dispatch(loadTasks());},
-		handleAddTask: function() {return dispatch(addTask());},
-		handleEditTask: function(task) {return dispatch(editTask(task));},
-		handleDeleteTask: function(taskId) {return dispatch(deleteTask(taskId));}
+		dispatchLoadTasks: function() {return dispatch(loadTasks());},
+		dispatchAddTask: function() {return dispatch(addTask());},
+		dispatchEditTask: function(task) {return dispatch(editTask(task));},
+		dispatchDeleteTask: function(taskId) {return dispatch(deleteTask(taskId));},
+		dispatchSaveTasks: function(tasks) {return dispatch(saveTasks(tasks));},
+		dispatchRemoveNotification: function() {return dispatch(removeNotification());}
 	};
 }
 

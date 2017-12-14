@@ -5,7 +5,8 @@ import {
 	SAVE_TASKS_RESPONSE,
 	ADD_TASK,
 	EDIT_TASK,
-	DELETE_TASK
+	DELETE_TASK,
+	REMOVE_NOTIFICATION
 } from '../actions/index';
 
 const initialState = {
@@ -18,19 +19,28 @@ const initialState = {
 
 export default function tasks(state, action) {
 	let updatedTasks;
+	let newNotification = '';
+	let updatedIdCounter;
 	switch (action.type) {
 		case LOAD_TASK_REQUEST:
 			return Object.assign({}, state, {isLoadingTasks: true});
 		case LOAD_TASK_RESPONSE:
-			const fetchedTasks = action.repsonse && action.response.tasks ? action.response.tasks : [];
-			return Object.assign({}, state, { tasks: fetchedTasks, isLoadingTasks: false });
+			const fetchedTasks = action.response && action.response.tasks ? action.response.tasks : [];
+			updatedIdCounter = state.idCounter;
+			if(fetchedTasks.length) {
+				updatedIdCounter = Math.max.apply(Math, fetchedTasks.map(function(fetchedTask) {
+					return fetchedTask.id;
+				}));
+			}
+			return Object.assign({}, state, { tasks: fetchedTasks, isLoadingTasks: false, idCounter: updatedIdCounter });
 		case SAVE_TASKS_REQUEST:
-			return console.log(action.type);
+			return Object.assign({}, state, { isSaveBtnEnabled: false });
 		case SAVE_TASKS_RESPONSE:
-			return console.log(action.type);
+			newNotification = 'Tasks saved successfully.';
+			return Object.assign({}, state, { notification: newNotification });
 		case ADD_TASK:
 			const newTasks = {}
-			const updatedIdCounter = state.idCounter + 1;
+			updatedIdCounter = state.idCounter + 1;
 			const newTask = {
 				name: '',
 				id: updatedIdCounter
@@ -39,7 +49,8 @@ export default function tasks(state, action) {
 			updatedTasks.unshift(newTask);
 			return Object.assign({}, state, {
 					tasks: updatedTasks,
-					idCounter: updatedIdCounter
+					idCounter: updatedIdCounter,
+					isSaveBtnEnabled: true
 				}
 			);
 		case EDIT_TASK:
@@ -49,12 +60,14 @@ export default function tasks(state, action) {
 				}
 				return task;
 			});
-			return Object.assign({}, state, { tasks: updatedTasks });
+			return Object.assign({}, state, { tasks: updatedTasks, isSaveBtnEnabled: true });
 		case DELETE_TASK:
 			updatedTasks = state.tasks.filter(function(task, index) {
 				return task.id !== action.taskId
 			}); 
-			return Object.assign({}, state, { tasks: updatedTasks });
+			return Object.assign({}, state, { tasks: updatedTasks, isSaveBtnEnabled: true });
+		case REMOVE_NOTIFICATION:
+			return Object.assign({}, state, { notification: '' });
 		default:
 			return initialState;
 	};
