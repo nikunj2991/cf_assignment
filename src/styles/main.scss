@@ -9,6 +9,8 @@ $green: #25cc68;
 $green-bg: #eefdfd;
 $blue-btn: #8592ab;
 $grey-shadow: #cacaca;
+$red-bg: #fff6f6;
+$red: #ce2525;
 $lato: 'Lato', sans-serif;
 
 html {
@@ -105,15 +107,24 @@ ol {
 	font-family: $lato;
 	font-size: 14px;
 	width: 35%;
-	color: $green;
-	border: 1px solid $green;
-	background: $green-bg;
 	line-height: 1.75;
 
 	span {
 		float: right;
 		margin: 4px 0 0;
 		cursor: pointer;
+	}
+
+	&.success {
+		color: $green;
+		border: 1px solid $green;
+		background: $green-bg;
+	}
+
+	&.error {
+		color: $red;
+		border: 1px solid $red;
+		background: $red-bg;
 	}
 }
 

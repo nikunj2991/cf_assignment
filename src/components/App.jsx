@@ -25,16 +25,8 @@ class App extends React.Component {
 		this.props.dispatchLoadTasks();
   	}
 
-  	componentDidUpdate() {
-  		const { notification, dispatchRemoveNotification } = this.props;
-  		if(notification.length) {
-  			this.timer = setTimeout(dispatchRemoveNotification, 3000);
-  		}
-  	}
-
   	_removeNotification() {
   		const { dispatchRemoveNotification } = this.props;
-  		clearTimeout(this.timer);
   		dispatchRemoveNotification();
   	}
 
@@ -54,7 +46,9 @@ class App extends React.Component {
 			dispatchDeleteTask,
 			dispatchRemoveNotification,
 			notification, 
-			isSaveBtnEnabled 
+			isSaveBtnEnabled,
+			errorNotification,
+			isLoadingTasks 
 		} = this.props;
 		return (
 			<div className="page">
@@ -77,9 +71,14 @@ class App extends React.Component {
 						  })
 						}
 					</ol>
-					{ !tasks.length && <div className="empty-tasks">Your tasks list is empty.</div>}
+					{ !tasks.length && !isLoadingTasks && <div className="empty-tasks">Your tasks list is empty.</div>}
 				</div>
-				{ notification && <Notification text={notification} removeNotification={this._removeNotification}/> }
+				{ notification && <Notification 
+					text={notification} 
+					removeNotification={this._removeNotification}
+					errorNotification={errorNotification}
+				  /> 
+				}
 			</div>
 		);
 	}
@@ -90,6 +89,7 @@ App.propTypes = {
 	isLoadingTasks: PropTypes.bool,
 	isSaveBtnEnabled: PropTypes.bool,
 	notification: PropTypes.string,
+	errorNotification: PropTypes.bool,
 	dispatchLoadTasks: PropTypes.func,
 	dispatchAddTask: PropTypes.func,
 	dispatchEditTask: PropTypes.func,
@@ -103,14 +103,16 @@ function mapStateToProps(state) {
 		isLoadingTasks,
 		isSaveBtnEnabled,
 		notification,
-		tasks
+		tasks,
+		errorNotification
 	} = state.tasks;
 
 	return {
 		isLoadingTasks,
 		isSaveBtnEnabled,
 		notification,
-		tasks		
+		tasks,
+		errorNotification		
 	}
 }
 

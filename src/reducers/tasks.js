@@ -9,12 +9,13 @@ import {
 	REMOVE_NOTIFICATION
 } from '../actions/index';
 
-const initialState = {
+export const initialState = {
 	tasks: [],
 	notification: '',
 	isSaveBtnEnabled: false,
 	isLoadingTasks: false,
-	idCounter: 0
+	idCounter: 0,
+	errorNotification: false
 };
 
 export default function tasks(state, action) {
@@ -25,6 +26,10 @@ export default function tasks(state, action) {
 		case LOAD_TASK_REQUEST:
 			return Object.assign({}, state, {isLoadingTasks: true});
 		case LOAD_TASK_RESPONSE:
+			if(action.response.error) {
+				newNotification = 'Unable to load tasks, please try again.'
+				return Object.assign({}, state, { errorNotification: true, notification: newNotification });
+			}
 			const fetchedTasks = action.response && action.response.tasks ? action.response.tasks : [];
 			updatedIdCounter = state.idCounter;
 			if(fetchedTasks.length) {
@@ -32,12 +37,21 @@ export default function tasks(state, action) {
 					return fetchedTask.id;
 				}));
 			}
-			return Object.assign({}, state, { tasks: fetchedTasks, isLoadingTasks: false, idCounter: updatedIdCounter });
+			return Object.assign({}, state, { 
+				tasks: fetchedTasks,
+				isLoadingTasks: false,
+				idCounter: updatedIdCounter
+			});
 		case SAVE_TASKS_REQUEST:
-			return Object.assign({}, state, { isSaveBtnEnabled: false });
+			return Object.assign({}, state, { isSaveBtnEnabled: false, notification: '' });
 		case SAVE_TASKS_RESPONSE:
-			newNotification = 'Tasks saved successfully.';
-			return Object.assign({}, state, { notification: newNotification });
+			if(action.response.error) {
+				newNotification = 'Unable to save tasks, please try again.';
+				return Object.assign({}, state, { notification: newNotification, errorNotification: true });
+			} else {
+				newNotification = 'Tasks saved successfully.';
+				return Object.assign({}, state, { notification: newNotification, errorNotification: false });
+			}
 		case ADD_TASK:
 			const newTasks = {}
 			updatedIdCounter = state.idCounter + 1;
