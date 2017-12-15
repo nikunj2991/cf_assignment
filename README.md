@@ -1,4 +1,4 @@
-CF Assignment
+<h2>CF Assignment</h2><br>
 A React page to load and render the list of tasks created by a user
 
 Please follow these steps to run the project locally:
